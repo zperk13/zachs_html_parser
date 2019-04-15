@@ -5,7 +5,7 @@ import requests
 from zachs_html_parser import tag_finder
 
 
-def get_base_url(url):
+def base_url(url):
     base_link_list = re.findall(r'(https://www\.|http://www\.|https://|http://)(.+?\.)([a-zA-Z]{1,13})', url)[0]
     base_link = ''
     for x in base_link_list:
@@ -13,7 +13,7 @@ def get_base_url(url):
     return base_link
 
 
-def find_all_links(link):
+def all_links(link):
     html = requests.get(link).text
     raw_links = []
     for x in tag_finder.a(html):
@@ -30,6 +30,6 @@ def find_all_links(link):
                     links.append(x)
                 else:
                     # If so add the base url in front of it then append it to the links list
-                    base_link = get_base_url(link)
+                    base_link = base_url(link)
                     links.append(base_link + x)
     return links
