@@ -13,8 +13,11 @@ def base_url(url):
     return base_link
 
 
-def all_links(link):
-    html = requests.get(link).text
+def all_links(link, html=''):
+    # function needs url to work properly, but you might've already made a request and might not want to do that again
+    # so you can give the html, and it wont't request again
+    if html=='':
+        html = requests.get(link).text
     raw_links = []
     for x in tag_finder.a(html):
         raw_links.append(x.href())
