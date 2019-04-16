@@ -1,1 +1,1 @@
-from zachs_html_parser import tag_finder, _objects, easy
+from zachs_html_parser import tag_finder, _objects, easy, spider
