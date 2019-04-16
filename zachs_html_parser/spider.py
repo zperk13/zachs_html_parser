@@ -8,7 +8,7 @@ import time
 
 def allow_disallow_sites(link):
     base_url = easy.base_url(link)
-    robotstxt = requests.get(base_url + '/robots.txt').text
+    robotstxt = requests.get(base_url + '/robots.txt', timeout=10).text
     pattern = re.compile(r'(User-agent: \*\s)((Allow: .+?\s|Disallow: .+?\s)+)', re.MULTILINE)
     allow_disallow = pattern.findall(robotstxt)
     fixed_regex = ''
@@ -30,7 +30,7 @@ def allow_disallow_sites(link):
     return allow_disallow_list
 
 def find_crawl_delay(robotstxt_site):
-    txt = requests.get(robotstxt_site).text
+    txt = requests.get(robotstxt_site, timeout=10).text
     pattern = re.compile(r'Crawl-delay: \d(\.\d+)?', re.MULTILINE)
     matches = pattern.findall(txt)
     if len(matches) > 0:
