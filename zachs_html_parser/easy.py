@@ -7,7 +7,6 @@ from zachs_html_parser import tag_finder
 
 def base_url(url):
     base_link_list = re.findall(r'(https://www\.|http://www\.|https://|http://)(.+?(/|$))', url)[0]
-    print(base_link_list)
     base_link = base_link_list[0] + base_link_list[1][:-1]
     return base_link
 
