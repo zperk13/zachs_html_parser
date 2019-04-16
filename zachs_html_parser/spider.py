@@ -1,10 +1,10 @@
 import re
+import time
 
 import requests
 
 from zachs_html_parser import easy
 
-import time
 
 def allow_disallow_sites(link):
     base_url = easy.base_url(link)
@@ -29,6 +29,7 @@ def allow_disallow_sites(link):
             allow_disallow_list.append(allowed_url)
     return allow_disallow_list
 
+
 def find_crawl_delay(robotstxt_site):
     txt = requests.get(robotstxt_site, timeout=10).text
     pattern = re.compile(r'Crawl-delay: \d(\.\d+)?', re.MULTILINE)
@@ -38,16 +39,20 @@ def find_crawl_delay(robotstxt_site):
     else:
         return 0
 
+
 # The intention of this is to get all the sites in a link (and the links in those) but also automatically check if it obeys robots.txt
 # It is unclear if it works but it seems to. If you want to test it, go ahead. I would appreciate it if you tweeted me the results at https://twitter.com/zperk13
-def scraper(link, generations=2, print_generation=False, print_crawl_delay=False):
-    crawl_delay = find_crawl_delay(easy.base_url(link)+'/robots.txt')
-    if print_crawl_delay:
+def scraper(link, generations=2, print_generation=False, print_crawl_delay=False, debug=False):
+    start_time = time.time()
+    crawl_delay = find_crawl_delay(easy.base_url(link) + '/robots.txt')
+    if print_crawl_delay or debug:
         print('Crawl Delay:', crawl_delay)
     time.sleep(crawl_delay)
     allow_disallow_list = allow_disallow_sites(link)
+
     def allow():
         allowed_sites = allow_disallow_list[1:]
+
         def check_if_allowed(url):
             allowed_url = False
             url_len = len(url)
@@ -56,25 +61,33 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                 if site_len <= url_len:
                     if url[:site_len] == site:
                         allowed_url = True
+            print(f'DEBUG: DETERMINED THAT {url} DISALLOWED STATUS IS {allowed_url}')
             return allowed_url
+
         ok_sites = []
         to_check_sites = [link]
         checked_sites = []
         for generation in range(generations):
-            if print_generation:
-                print(f'Generation: {generation+1}/{generations}')
+            if print_generation or debug:
+                print(f'Generation: {generation + 1}/{generations}')
             next_to_check_sites = []
             for site in to_check_sites:
+                if debug:
+                    print(f'DEBUG: CHECKING {site}')
                 if check_if_allowed(site):
                     ok_sites.append(site)
                     for a in easy.all_links(link):
                         time.sleep(crawl_delay)
                         if a not in checked_sites:
                             next_to_check_sites.append(a)
+                            if debug:
+                                print(f'DEBUG: ADDED {a} TO next_to_check_sites')
                 checked_sites.append(site)
+                if debug:
+                    print(f'DEBUG: ADDED {site} TO checked_sites')
+
             to_check_sites = next_to_check_sites
         return ok_sites
-
 
     def disallow():
         disallowed_sites = allow_disallow_list[1:]
@@ -90,26 +103,38 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                         if base_url_len <= url_len:
                             if url[:base_url_len] == base_url_len:
                                 disallowed_url = True
+            print(f'DEBUG: DETERMINED THAT {url} DISALLOWED STATUS IS {disallowed_url}')
             return disallowed_url
 
         ok_sites = []
         to_check_sites = [link]
         checked_sites = []
         for generation in range(generations):
-            if print_generation:
-                print(f'Generation: {generation+1}/{generations}')
+            if print_generation or debug:
+                print(f'Generation: {generation + 1}/{generations}')
             next_to_check_sites = []
             for site in to_check_sites:
+                if debug:
+                    print(f'DEBUG: CHECKING {site}')
                 if not check_if_disallowed(site):
                     ok_sites.append(site)
                     for a in easy.all_links(link):
                         time.sleep(crawl_delay)
                         if a not in checked_sites:
                             next_to_check_sites.append(a)
+                            if debug:
+                                print(f'DEBUG: ADDED {a} TO next_to_check_sites')
                 checked_sites.append(site)
+                if debug:
+                    print(f'DEBUG: ADDED {site} TO checked_sites')
             to_check_sites = next_to_check_sites
         return ok_sites
+
     if allow_disallow_list[0] == 'allow':
+        if debug:
+            print('DEBUG: USING ALLOW METHOD')
         return allow()
     else:
+        if debug:
+            print('DEBUG: USING DISALLOW METHOD')
         return disallow()
