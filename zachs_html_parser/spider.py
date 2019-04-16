@@ -49,6 +49,8 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
         print('Crawl Delay:', crawl_delay)
     time.sleep(crawl_delay)
     allow_disallow_list = allow_disallow_sites(link)
+    if debug:
+        print('DEBUG: allow_disallow_list', allow_disallow_list)
 
     def allow():
         allowed_sites = allow_disallow_list[1:]
