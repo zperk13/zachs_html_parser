@@ -25,3 +25,8 @@ class _a(object):
         raw_href = re.findall(r'href=\s?".+?"', self.text)[0]
         href_class = _href(raw_href)
         return href_class.get_link()
+
+    def desc(self):
+        regex = re.findall(r'>.*?</a>', self.string())[0]
+        if len(regex)>5:
+            return regex[1:-4]
