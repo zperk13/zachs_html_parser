@@ -34,15 +34,16 @@ def allow_disallow_sites(link):
 def find_crawl_delay(robotstxt_site):
     txt = requests.get(robotstxt_site, timeout=10).text
     pattern = re.compile(r'(Crawl-delay: \d)(\.\d+)?', re.MULTILINE)
-    matches = pattern.findall(txt)[0]
+    matches = pattern.findall(txt)
     if len(matches) > 0:
-        if len(matches) > 1:
-            crawl_delay = float(matches[0][-1] + matches[1])
-        else:
-            crawl_delay = int(matches[0][-1])
-        return crawl_delay
+        matches = matches[0]
     else:
         return 0
+    if len(matches) > 1:
+        crawl_delay = float(matches[0][-1] + matches[1])
+    else:
+        crawl_delay = int(matches[0][-1])
+    return crawl_delay
 
 
 # The intention of this is to get all the sites in a link (and the links in those) but also automatically check if it obeys robots.txt
