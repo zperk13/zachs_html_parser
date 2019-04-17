@@ -11,6 +11,8 @@ def allow_disallow_sites(link):
     robotstxt = requests.get(base_url + '/robots.txt', timeout=10).text
     pattern = re.compile(r'(User-agent: \*\s)((Allow: .+?\s|Disallow: .+?\s)+)', re.MULTILINE)
     allow_disallow = pattern.findall(robotstxt)
+    if len(allow_disallow) == 0:
+        raise Exception("No 'User-agent: *' info detected")
     fixed_regex = ''
     for x in allow_disallow[0]:
         fixed_regex += x
