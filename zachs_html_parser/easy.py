@@ -2,7 +2,7 @@ import re
 
 import requests
 
-from zachs_html_parser import tag_finder
+from zachs_html_parser import tag_finder, spider
 
 
 def base_url(url):
@@ -14,7 +14,7 @@ def base_url(url):
 def all_links(link, html=''):
     # function needs url to work properly, but you might've already made a request and might not want to do that again
     # so you can give the html, and it wont't request again
-    if html=='':
+    if html == '':
         html = requests.get(link, timeout=5).text
     raw_links = []
     for x in tag_finder.a(html):
@@ -34,3 +34,9 @@ def all_links(link, html=''):
                     base_link = base_url(link)
                     links.append(base_link + x)
     return links
+
+
+def safe_all_links(link):
+    safe_site = spider.scraper(link, generations=1)
+    if len(safe_site) == 1:
+        return all_links(link)
