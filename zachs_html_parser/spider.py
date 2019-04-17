@@ -104,7 +104,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
             url_len = len(url)
             if easy.base_url(url) != easy.base_url(link):
                 if debug:
-                    print(f'DEBUG: DETERMINED THAT {url} IS OUT OUT SITE')
+                    print(f'DEBUG: DETERMINED THAT {url} IS OUT OF SITE')
                 return True
             for site in disallowed_sites:
                 site_len = len(site)
