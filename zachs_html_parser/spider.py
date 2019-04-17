@@ -62,7 +62,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                 if site_len <= url_len:
                     if url[:site_len] == site:
                         allowed_url = True
-            print(f'DEBUG: DETERMINED THAT {url} DISALLOWED STATUS IS {allowed_url}')
+            print(f'DEBUG: DETERMINED THAT {url} ALLOWED STATUS IS {allowed_url}')
             return allowed_url
 
         ok_sites = []
