@@ -20,8 +20,9 @@ def allow_disallow_sites(link):
         allow_disallow_list = ['allow']
         for x in allow_disallow:
             if x[0] == 'A':
-                allowed_url = base_url + x[7:]
-                allow_disallow_list.append(allowed_url)
+                if not ('Disallow' in allow_disallow and x == 'Allow: /'):
+                    allowed_url = base_url + x[7:]
+                    allow_disallow_list.append(allowed_url)
     else:
         allow_disallow_list = ['disallow']
         for x in allow_disallow:
