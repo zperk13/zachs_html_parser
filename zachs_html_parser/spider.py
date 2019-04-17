@@ -33,10 +33,14 @@ def allow_disallow_sites(link):
 
 def find_crawl_delay(robotstxt_site):
     txt = requests.get(robotstxt_site, timeout=10).text
-    pattern = re.compile(r'Crawl-delay: \d(\.\d+)?', re.MULTILINE)
-    matches = pattern.findall(txt)
+    pattern = re.compile(r'(Crawl-delay: \d)(\.\d+)?', re.MULTILINE)
+    matches = pattern.findall(txt)[0]
     if len(matches) > 0:
-        return matches[0]
+        if len(matches) > 1:
+            crawl_delay = float(matches[0][-1] + matches[1])
+        else:
+            crawl_delay = int(matches[0][-1])
+        return crawl_delay
     else:
         return 0
 
