@@ -70,7 +70,8 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                 if site_len <= url_len:
                     if url[:site_len] == site:
                         allowed_url = True
-            print(f'DEBUG: DETERMINED THAT {url} ALLOWED STATUS IS {allowed_url}')
+            if debug:
+                print(f'DEBUG: DETERMINED THAT {url} ALLOWED STATUS IS {allowed_url}')
             return allowed_url
 
         ok_sites = []
@@ -78,7 +79,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
         checked_sites = []
         for generation in range(generations):
             if print_generation or debug:
-                print(f'Generation: {generation + 1}/{generations}')
+                print(f'Generation: {generation + 1}/{generations}. Checking {len(to_check_sites)} sites')
             next_to_check_sites = []
             for site in to_check_sites:
                 if debug:
