@@ -24,7 +24,6 @@ class _a(object):
         # findall returns a list which should have only one object, so [0]
         try:
             raw_href = re.findall(r"""href=(["'])(.+?)\1""", self.text)[0][1]
-            print(raw_href)
             href_class = _href(raw_href)
             return href_class.get_link()
         except IndexError:
