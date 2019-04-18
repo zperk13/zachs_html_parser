@@ -6,7 +6,7 @@ from zachs_html_parser import _objects, spider
 
 
 def a(html):
-    pattern = re.compile('(<a.+?</a>|<a\s+?</a>)', re.MULTILINE)
+    pattern = re.compile('<a[^我]*?</a>', re.MULTILINE)
     matches = pattern.findall(html)
     real_matches = []
     for x in matches:
