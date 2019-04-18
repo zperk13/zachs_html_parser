@@ -93,7 +93,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                     ok_sites.append(site)
                     for a in easy.all_links(link):
                         time.sleep(crawl_delay)
-                        if a not in checked_sites:
+                        if a not in checked_sites and a not in next_to_check_sites and a not in to_check_sites:
                             next_to_check_sites.append(a)
                             if debug:
                                 print(f'DEBUG: ADDED {a} TO next_to_check_sites')
@@ -137,7 +137,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                     ok_sites.append(site)
                     for a in easy.all_links(link):
                         time.sleep(crawl_delay)
-                        if a not in checked_sites:
+                        if a not in checked_sites and a not in next_to_check_sites and a not in to_check_sites:
                             next_to_check_sites.append(a)
                             if debug:
                                 print(f'DEBUG: ADDED {a} TO next_to_check_sites')
