@@ -17,24 +17,24 @@ def all_links(link, html=''):
     if html == '':
         html = requests.get(link, timeout=5).text
     raw_links = []
-    for x in tag_finder.a(html):
-        raw_links.append(x.href())
+    for tag in tag_finder.a(html):
+        raw_links.append(tag.href())
     links = []
-    for x in raw_links:
+    for raw_link in raw_links:
         # making sure it's actually a link
-        if x != None:
-            if len(x) > 1:
+        if raw_link is not None:
+            if len(raw_link) > 1:
                 # making sure it's not a link to an id in the page
-                if x[0] != '#':
+                if raw_link[0] != '#':
                     # Checks if it's a redirect to another page in the website
-                    if x[0] != '/':
+                    if raw_link[0] != '/':
                         # If not append it to the links list
-                        links.append(x)
+                        links.append(raw_link)
                     else:
                         # If so add the base url in front of it then append it to the links list
                         base_link = base_url(link)
-                        links.append(base_link + x)
-        return links
+                        links.append(base_link + raw_link)
+    return links
 
 
 def safe_all_links(link):
