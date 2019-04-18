@@ -27,7 +27,7 @@ class _a(object):
             href_class = _href(raw_href)
             return href_class.get_link()
         except IndexError:
-            print(f'\n\nhref not found for {self.string()}, ignoring\n\n')
+            print(f'\nhref not found for {self.string()}, ignoring\n')
 
     def desc(self):
         regex = re.findall(r'>.*?</a>', self.string())[0]
