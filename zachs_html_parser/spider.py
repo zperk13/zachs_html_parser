@@ -12,7 +12,7 @@ def allow_disallow_sites(link):
     pattern = re.compile(r'(User-agent: \*\s)((Allow: .+?\s|Disallow: .+?\s)+)', re.MULTILINE)
     allow_disallow = pattern.findall(robotstxt)
     if len(allow_disallow) == 0:
-        if 'User-agent: *' in robotstxt or len(robotstxt)<2:
+        if 'User-agent: *' in robotstxt or len(robotstxt) < 2:
             return ['disallow', '/no_disallow_this_will_never_be_in_an_url']
         raise Exception("No 'User-agent: *' info detected")
     fixed_regex = ''
@@ -66,14 +66,17 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
 
     def allow():
         allowed_sites = allow_disallow_list[1:]
+        external_sites = []
 
         def check_if_allowed(url):
             allowed_url = False
             url_len = len(url)
             if easy.base_url(url) != easy.base_url(link):
+                if url not in external_sites:
+                    external_sites.append(url)
                 if debug:
-                    print(f'DEBUG: DETERMINED THAT {url} IS OUT OF SITE')
-                return True
+                    print(f'DEBUG: DETERMINED THAT {url} IS OUT OF SITE, ADDING TO external_sites')
+                return False
             for site in allowed_sites:
                 site_len = len(site)
                 if site_len <= url_len:
@@ -106,15 +109,18 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                     print(f'DEBUG: ADDED {site} TO checked_sites')
 
             to_check_sites = next_to_check_sites
-        return ok_sites
+        return {'pages': ok_sites, 'external_pages': external_sites}
 
     def disallow():
         disallowed_sites = allow_disallow_list[1:]
+        external_sites = []
 
         def check_if_disallowed(url):
             disallowed_url = False
             url_len = len(url)
             if easy.base_url(url) != easy.base_url(link):
+                if url not in external_sites:
+                    external_sites.append(url)
                 if debug:
                     print(f'DEBUG: DETERMINED THAT {url} IS OUT OF SITE')
                 return True
@@ -149,7 +155,7 @@ def scraper(link, generations=2, print_generation=False, print_crawl_delay=False
                 if debug:
                     print(f'DEBUG: ADDED {site} TO checked_sites')
             to_check_sites = next_to_check_sites
-        return ok_sites
+        return {'pages': ok_sites, 'external_pages': external_sites}
 
     if allow_disallow_list[0] == 'allow':
         if debug:
