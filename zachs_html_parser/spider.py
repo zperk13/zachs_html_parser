@@ -52,6 +52,8 @@ def find_crawl_delay(robotstxt_site):
 
 # The intention of this is to get all the sites in a link (and the links in those) but also automatically check if it obeys robots.txt
 # It is unclear if it works but it seems to. If you want to test it, go ahead. I would appreciate it if you tweeted me the results at https://twitter.com/zperk13
+# Return a dictionary. dictionary{'pages'} returns a list of pages on the site that are ok to check according to the robots.txt file,
+# dictionary{'external_pages'} returns a list of pages from external sites (they are not checked for robots.txt and will need to be run with this function)
 def scraper(link, generations=2, print_generation=False, print_crawl_delay=False, debug=False):
     robotstxt_url = easy.base_url(link) + '/robots.txt'
     if debug:
