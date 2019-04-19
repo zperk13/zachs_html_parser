@@ -12,7 +12,7 @@ def allow_disallow_sites(link):
     pattern = re.compile(r'(User-agent: \*\s)((Allow: .+?\s|Disallow: .+?\s)+)', re.MULTILINE)
     allow_disallow = pattern.findall(robotstxt)
     if len(allow_disallow) == 0:
-        if 'User-agent: *' in robotstxt:
+        if 'User-agent: *' in robotstxt or len(robotstxt)<2:
             return ['disallow', '/no_disallow_this_will_never_be_in_an_url']
         raise Exception("No 'User-agent: *' info detected")
     fixed_regex = ''
