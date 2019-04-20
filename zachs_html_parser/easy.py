@@ -10,7 +10,7 @@ def base_url(url):
     if base_link_list[1][-1] == '/':
         base_link = base_link_list[0] + base_link_list[1][:-1]
     else:
-        base_link = base_link_list[0] + base_link_list[1]
+        base_link = base_link_list[0] + base_link_list[1] + '/'
     return base_link
 
 
