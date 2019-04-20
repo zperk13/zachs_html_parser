@@ -7,7 +7,10 @@ from zachs_html_parser import tag_finder, spider
 
 def base_url(url):
     base_link_list = re.findall(r'(https://www\.|http://www\.|https://|http://)(.+?(/|$))', url)[0]
-    base_link = base_link_list[0] + base_link_list[1][:-1]
+    if base_link_list[1][-1] == '/':
+        base_link = base_link_list[0] + base_link_list[1][:-1]
+    else:
+        base_link = base_link_list[0] + base_link_list[1]
     return base_link
 
 
